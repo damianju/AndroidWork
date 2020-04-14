@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
     } // end onCreate()
 
     // 방법1 : 레이아웃 xml 의 onXXX 속성으로 지정
