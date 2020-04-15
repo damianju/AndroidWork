@@ -92,8 +92,12 @@ public class Main2Activity extends AppCompatActivity{
                         a = a * Integer.valueOf(et.getText().toString().trim());
                         et.setText(Integer.toString(a));
                     } else if(where==4) {
-                        a = a / Integer.valueOf(et.getText().toString().trim());
-                        et.setText(Integer.toString(a));
+                        try {
+                            a = a / Integer.valueOf(et.getText().toString().trim());
+                            et.setText(Integer.toString(a));
+                        } catch (ArithmeticException e) {
+                            onClick(btnC);
+                        }
                     }
                 } else if(v==btnC) {
                     et.setText("");
