@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 연습
         // +, - 버튼 누르면 tvResult 의 글씨가 점점 커지고/작아지게 하기
         // getTextSize() : float 값 리턴
-        Button btnInc =findViewById(R.id.btnInc);
-        Button btnDec =findViewById(R.id.btnDec);
+        Button btnInc = findViewById(R.id.btnInc);
+        Button btnDec = findViewById(R.id.btnDec);
 
         btnInc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +113,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tvResult.setTextSize(0, size + 5);
             }
         });
+
+        btnDec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float size = tvResult.getTextSize();
+                Log.d("myapp", "글꼴사이즈: " + size);
+                tvResult.setTextSize(0, size - 5);
+            }
+        });
+
+
+
 
 
     } // end onCreate()
