@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +39,19 @@ public class Main2Activity extends AppCompatActivity {
 
                 int a,b;
 
-               // if(oper1 !=null && !oper1.trim())
+                if(oper1 !=null && !oper1.trim().equals("")){
+                    a = Integer.parseInt(oper1);
+                } else {
+                    a= 0;
+                }
+                // "".equals(oper2)
+                if(oper2 != null && !oper2.trim().equals("")) {
+                    b = Integer.parseInt(oper2);
+                } else {
+                    b=0;
+                }
+                tvResult.setText((a+b)+"");
+                // a+b
 
 
             }
@@ -55,6 +68,15 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
             });
+
+        op1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            // 타이핑 완료 되었을 때 호출되는 메소드
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                tvResult.setText("첫번째 숫자 입력완료");
+                return false;
+            }
+        });
 
 
     } // end onCreate
