@@ -130,7 +130,7 @@ public class PhonebookAdapter extends RecyclerView.Adapter<PhonebookAdapter.View
                 public void onClick(View v) {
                      int position = getAdapterPosition(); // 이 리스너가 장착된 item 의 리스트상의 position 값
                     //Toast.makeText(v.getContext(), "position:"+position, Toast.LENGTH_LONG).show();
-                    // 아이템을 클리갛면 해당 세부 정보 액티비티로 넘겨주기
+                    // 아이템을 클릭하면 해당 세부 정보 액티비티로 넘겨주기
                     Intent intent = new Intent(v.getContext(), PhonebookDetail.class);
                     intent.putExtra("pb", adapter.getItem(position));
 
