@@ -13,15 +13,18 @@ import android.view.View.OnClickListener;
 public class Main2Activity extends AppCompatActivity{
     // 과제 계산기 앱 만들기
     EditText et;
+    double cal1;
+    double cal2;
+    String operator;
 
-    int a;
-    int where =0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+
 
         et = findViewById(R.id.et);
 
@@ -42,85 +45,65 @@ public class Main2Activity extends AppCompatActivity{
         Button btnE = findViewById(R.id.btnE);
         Button btnC = findViewById(R.id.btnC);
 
-        OnClickListener cl = new OnClickListener(){
+
+        btnE.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v == btn0) {
-                    et.setText(et.getText().toString() + 0);
-                } else if (v == btn1) {
-                    et.setText(et.getText().toString() + 1);
-                } else if (v == btn2) {
-                    et.setText(et.getText().toString() + 2);
-                } else if (v == btn3) {
-                    et.setText(et.getText().toString() + 3);
-                } else if (v == btn4) {
-                    et.setText(et.getText().toString() + 4);
-                } else if (v == btn5) {
-                    et.setText(et.getText().toString() + 5);
-                } else if (v == btn6) {
-                    et.setText(et.getText().toString() + 6);
-                } else if (v == btn7) {
-                    et.setText(et.getText().toString() + 7);
-                } else if (v == btn8) {
-                    et.setText(et.getText().toString() + 8);
-                } else if (v == btn9) {
-                    et.setText(et.getText().toString() + 9);
-                } else if(v== btnA){
-                    a = Integer.valueOf(et.getText().toString().trim());
-                    et.setText("");
-                    where = 1;
-                } else if(v== btnS) {
-                    a = Integer.valueOf(et.getText().toString().trim());
-                    et.setText("");
-                    where = 2;
-                } else if(v== btnM){
-                    a = Integer.valueOf(et.getText().toString().trim());
-                    et.setText("");
-                    where = 3;
-                } else if(v== btnD) {
-                    a = Integer.valueOf(et.getText().toString().trim());
-                    et.setText("");
-                    where = 4;
-                } else if (v==btnE) {
-                    if(where==1) {
-                        a = a + Integer.valueOf(et.getText().toString().trim());
-                        et.setText(Integer.toString(a));
-                    } else if(where==2) {
-                        a = a - Integer.valueOf(et.getText().toString().trim());
-                        et.setText(Integer.toString(a));
-                    } else if(where==3) {
-                        a = a * Integer.valueOf(et.getText().toString().trim());
-                        et.setText(Integer.toString(a));
-                    } else if(where==4) {
-                        try {
-                            a = a / Integer.valueOf(et.getText().toString().trim());
-                            et.setText(Integer.toString(a));
-                        } catch (ArithmeticException e) {
-                            onClick(btnC);
-                        }
+                if(!et.getText().equals("") && !operator.equals("")) {
+                    cal2 = Double.parseDouble(et.getText().toString());
+                    try{if(operator.equals("+")){
+                        et.setText((cal1+cal2)+"");
+                    } else if(operator.equals("-")){
+                        et.setText((cal1-cal2)+"");
+                    } else if(operator.equals("×")){
+                        et.setText((cal1*cal2)+"");
+                    }  else{
+                        et.setText((cal1/cal2)+"");
                     }
-                } else if(v==btnC) {
-                    et.setText("");
+                    } catch (ArithmeticException e){
+                    }
                 }
+            } // end onClick()
+        });
+
+        btnC.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et.setText("");
+            }
+        });
+
+        OnClickListener cal = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal1 = Double.parseDouble(et.getText().toString());
+                et.setText(et.getText().append((String)((Button)v).getText()));
+                operator = (String)((Button)v).getText();
             }
         };
 
-        btn0.setOnClickListener(cl);
-        btn1.setOnClickListener(cl);
-        btn2.setOnClickListener(cl);
-        btn3.setOnClickListener(cl);
-        btn4.setOnClickListener(cl);
-        btn5.setOnClickListener(cl);
-        btn6.setOnClickListener(cl);
-        btn7.setOnClickListener(cl);
-        btn8.setOnClickListener(cl);
-        btn9.setOnClickListener(cl);
-        btnA.setOnClickListener(cl);
-        btnS.setOnClickListener(cl);
-        btnM.setOnClickListener(cl);
-        btnD.setOnClickListener(cl);
-        btnE.setOnClickListener(cl);
-        btnC.setOnClickListener(cl);
+        OnClickListener num = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et.setText((String)((Button)v).getText());
+            }
+        };
+
+        btn0.setOnClickListener(num);
+        btn1.setOnClickListener(num);
+        btn2.setOnClickListener(num);
+        btn3.setOnClickListener(num);
+        btn4.setOnClickListener(num);
+        btn5.setOnClickListener(num);
+        btn6.setOnClickListener(num);
+        btn7.setOnClickListener(num);
+        btn8.setOnClickListener(num);
+        btn9.setOnClickListener(num);
+        btnA.setOnClickListener(cal);
+        btnS.setOnClickListener(cal);
+        btnM.setOnClickListener(cal);
+        btnD.setOnClickListener(cal);
+
 
     } // end onCreate()
 
