@@ -4,7 +4,6 @@ package com.lec.android.a008_practice;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -41,8 +40,6 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     public int getItemCount() {
         return items.size();
     }
-
-    //Intent intent = getIntent();
 
 
     static class ViewHoler extends RecyclerView.ViewHolder{
