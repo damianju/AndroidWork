@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         int age = Integer.parseInt(etAge.getText().toString());
         String address = etAddress.getText().toString();
 
-        List<String> nameList = new ArrayList<String>();
-        List<Integer> ageList = new ArrayList<Integer>();
-        List<String> addressList = new ArrayList<String>();
+        List<String> nameList = new ArrayList<>();
+        List<Integer> ageList = new ArrayList<>();
+        List<String> addressList = new ArrayList<>();
 
         nameList.add(name);
         ageList.add(age);

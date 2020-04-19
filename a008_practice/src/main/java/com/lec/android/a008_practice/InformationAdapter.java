@@ -16,7 +16,7 @@ import java.util.List;
 
 public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.ViewHoler>{
 
-    List<Information> items = new ArrayList<Information>();
+    List<Information> items = new ArrayList<>();
 
     static InformationAdapter adapter;
 
