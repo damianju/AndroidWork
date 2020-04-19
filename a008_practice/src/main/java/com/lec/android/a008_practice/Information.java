@@ -1,6 +1,8 @@
 package com.lec.android.a008_practice;
 
-public class Information {
+import java.io.Serializable;
+
+public class Information implements Serializable {
 
     String name;
     int age;

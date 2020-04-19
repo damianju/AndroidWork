@@ -6,21 +6,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:background="#C1BEBE"
+    android:background="#efefef"
     >
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true"
         >
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            >
 
             <TableRow
                 android:layout_width="match_parent"
@@ -37,6 +38,7 @@
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textPersonName" />
             </TableRow>
@@ -56,6 +58,7 @@
                     android:id="@+id/etAge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ems="10"
                     android:inputType="number" />
             </TableRow>
@@ -75,6 +78,7 @@
                     android:id="@+id/etAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:text="" />
@@ -87,9 +91,10 @@
         android:id="@+id/btnAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:text="추가" />
+        android:layout_margin="5dp"
+        android:backgroundTint="#fff2cc"
+        android:text="추가"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -97,6 +102,7 @@
         android:layout_margin="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
