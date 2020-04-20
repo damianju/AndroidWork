@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -39,13 +40,28 @@ public class MainActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    insertData(v);
+                    rv.setAdapter(adapter);
 
-               insertData(v);
 
-               rv.setAdapter(adapter);
 
             }
         });
+
+        View.OnFocusChangeListener focus = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus){
+                ((EditText)v).setBackgroundColor(Color.YELLOW);
+            } else {
+                ((EditText)v).setBackgroundColor(Color.parseColor("#00000000"));
+            }
+            }
+        };
+
+        etName.setOnFocusChangeListener(focus);
+        etAge.setOnFocusChangeListener(focus);
+        etAddress.setOnFocusChangeListener(focus);
 
     } // end onCreate()
 
