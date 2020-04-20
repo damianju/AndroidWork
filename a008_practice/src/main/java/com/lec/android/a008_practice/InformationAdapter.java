@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.ViewHoler>{
+public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.ViewHolder>{
 
     List<Information> items = new ArrayList<>();
 
@@ -23,15 +23,15 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
 
     @NonNull
     @Override
-    public ViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inf = LayoutInflater.from(parent.getContext());
         View itemView = inf.inflate(R.layout.item, parent, false);
 
-        return new ViewHoler(itemView);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHoler holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Information item = items.get(position);
         holder.setItem(item);
     }
@@ -42,11 +42,11 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     }
 
 
-    static class ViewHoler extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvName, tvAge, tvAddress;
         ImageButton btnDelItem;
 
-        public ViewHoler(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvName = itemView.findViewById(R.id.tvName);
