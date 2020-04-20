@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     EditText etName, etAge, etAddress;
     RecyclerView rv;
     Button btnAdd;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                     insertData(v);
                     rv.setAdapter(adapter);
-
-
 
             }
         });
@@ -83,5 +82,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         idx++;
     } // end insertData()
+
+
 
 } // end Activity

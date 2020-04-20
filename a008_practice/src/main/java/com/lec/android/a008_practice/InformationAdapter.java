@@ -1,6 +1,7 @@
 package com.lec.android.a008_practice;
 
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,16 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
                 }
             });
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(v.getContext(), InformationDetail.class);
+                    intent.putExtra("inf", adapter.getItem(position));
+                    v.getContext().startActivity(intent);
+                }
+            });
+
         } // end 생성자
 
         public void setItem(Information item){
@@ -73,6 +84,7 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     } // end  ViewHolder
 
     public void addItem(Information item) { items.add(item);}
+    public Information getItem(int position) {return items.get(position);}
     public void removeItem(int position){items.remove(position);}
 
 } // end InformationAdapter class
