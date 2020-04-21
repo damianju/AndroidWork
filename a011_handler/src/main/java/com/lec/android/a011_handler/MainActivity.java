@@ -75,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 // 작업스레드에서 메인UI 직접 건드릴 수 없다.
+                // Only the original thread that created a view hierarchy can touch its views.
                 //tvBackValue1.setText(""+backValue1);
+
 
             }
         }
