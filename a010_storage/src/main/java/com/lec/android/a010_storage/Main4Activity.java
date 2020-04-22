@@ -107,7 +107,7 @@ public class Main4Activity extends AppCompatActivity {
 
 
                 if("".equals(name)){
-                    tvResult.setText("INSERT 실패: 필수 항목 입력하세요");
+                    tvResult.setText("UPDATE 실패: 필수 항목 입력하세요");
                     return;
                 }
 
@@ -115,7 +115,7 @@ public class Main4Activity extends AppCompatActivity {
                 try{
                     a = Integer.parseInt(age);
                 } catch (NumberFormatException e) {
-                    tvResult.setText("INSERT 실패-age는 숫자로 입력하세요");
+                    tvResult.setText("UPDATE 실패-age는 숫자로 입력하세요");
                 }
 
                 update(name, a, address);
@@ -128,8 +128,13 @@ public class Main4Activity extends AppCompatActivity {
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 tvResult.setText("");
+                try{
                 select();
+                }catch (NullPointerException e) {
+                    etName.setText("");
+                }
             }
         });
 
