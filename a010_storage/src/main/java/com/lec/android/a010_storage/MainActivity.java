@@ -35,6 +35,9 @@ import java.io.PrintWriter;
  *      - openFileOutput() 를 사용하여 저장  (  FileOutputStream 객체 리턴함 )
  */
 
+// device File Explorer 에서 생성된 파일 확인 가능
+// Pixel2 폰의 경우
+// /data/data/com.lec.android.a010_storage/files/myfile.txt
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     BufferedReader reader =new BufferedReader(new InputStreamReader(is));
 
                     StringBuffer data =  new StringBuffer();
-                    String str = reader.readLine(); // 파엘에서 한줄을 읽어오기
+                    String str = reader.readLine(); // 파일에서 한줄을 읽어오기
                     while (str !=null){
                         data.append(str+"\n");
                         str = reader.readLine();
