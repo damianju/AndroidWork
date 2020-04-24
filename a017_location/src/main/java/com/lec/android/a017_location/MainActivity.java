@@ -3,6 +3,7 @@ package com.lec.android.a017_location;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         tvResult = findViewById(R.id.tvResult);
 

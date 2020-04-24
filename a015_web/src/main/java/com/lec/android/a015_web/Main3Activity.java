@@ -35,21 +35,42 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+/* XML, JSON 파싱 연습
+ *
+ * ■서울시 지하철 역사 정보
+http://data.seoul.go.kr/dataList/datasetView.do?infId=OA-12753&srvType=A&serviceKind=1&currentPageNo=1
+샘플url
+XML 버젼
+http://swopenAPI.seoul.go.kr/api/subway/4d46796d7366726f3833774a774955/xml/stationInfo/1/5/서울
+JSON 버젼
+http://swopenAPI.seoul.go.kr/api/subway/4d46796d7366726f3833774a774955/json/stationInfo/1/5/서울
+ */
+
+// 32강 com.lec.java.crawl11 참조
+
 public class Main3Activity extends AppCompatActivity {
-    public static final String API_KEY = "554272615264616d3132394273656947";
-    TextView tvResult;
-    String url_address;
-    EditText editText;
+
+    private TextView tvResult;
+    private EditText et;
+    private Button btnXML;
+    private Button btnJSON;
+    private Button btnParse;
+
+    // 웹사이트 주소를 저장할 변수
     String reqType = "xml";
+    String reqService = "stationInfo";
+    int reqStartIndex =0;
+    int reqEndIndex = 5;
+    String reqSearchStr ="";
 
+    String api_key = "";
 
-    int startIndex=1;
-    int endIndex=5;
-    String statnNm;
-    final StringBuilder sb = new StringBuilder();
+    String urlAddress;
+    Handler handeler = new Handler(); // 화면에 그려주기 위한 객체
+    HttpURLConnection conn;
+    StringBuffer sb;
 
-    Handler handler = new Handler();
-    // XML 파싱
+    //XML 파싱
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
 
@@ -59,59 +80,83 @@ public class Main3Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
-        tvResult = findViewById(R.id.tvResult);
-        editText = findViewById(R.id.editText);
-        Button btnXML = findViewById(R.id.btnXML);
-        Button btnJSON = findViewById(R.id.btnJSON);
-        Button btnParse = findViewById(R.id.btnParse);
+        // 웹에서 html 읽어오기
+        // 1. 인터넷 권한 얻어오기 AndroidManifest.xml
+        // 2. 쓰레드를 작성
+        // 3. Handler 객체를 통해야만 화면을 그릴수 있다
 
-        statnNm = editText.getText().toString().trim();
+        tvResult = findViewById(R.id.tvResult);
+        btnXML = findViewById(R.id.btnXML);
+        btnJSON = findViewById(R.id.btnJSON);
+        btnParse = findViewById(R.id.btnParse);
+        et = findViewById(R.id.editText);
+
+        api_key = getResources().getString(R.string.api_key);
+
+        //DOM parser 객체 생성
+
+        try {
+            dbFactory =  DocumentBuilderFactory.newInstance();
+            dBuilder = dbFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
 
         btnXML.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 reqType = "xml";
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            url_address = buildUrlAddress(reqType, startIndex, endIndex, statnNm);
-                            request(url_address);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                // EditText 에 입력된 역 이름의 공백제거.
+                reqSearchStr = et.getText().toString().trim().replaceAll(" ", "");
 
-            }
+                // url 에 한글이 들어가는 경우 URLEncode 를 해야 한다.
+
+                try {
+                    reqSearchStr = URLEncoder.encode(reqSearchStr,"UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                if(reqSearchStr.length() >0){
+                    urlAddress = "http://swopenAPI.seoul.go.kr/api/subway/" +
+                            api_key+"/"+reqType+"/"+reqService+"/"+
+                            reqStartIndex+"/"+reqEndIndex+"/"+reqSearchStr;
+
+                    sendRequest(); // 웹에서 html 읽어오기
+                }// end if
+            }// end onClick()
         });
 
         btnJSON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reqType = "json";
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            url_address = buildUrlAddress(reqType, startIndex, endIndex, statnNm);
-                            request(url_address);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                // EditText 에 입력된 역 이름의 공백제거.
+                reqSearchStr = et.getText().toString().trim().replaceAll(" ", "");
+
+                // url 에 한글이 들어가는 경우 URLEncode 를 해야 한다.
+                try {
+                    reqSearchStr = URLEncoder.encode(reqSearchStr, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                if(reqSearchStr.length() >0){
+                    urlAddress = "http://swopenAPI.seoul.go.kr/api/subway/" +
+                            api_key+"/"+reqType+"/"+reqService+"/"+
+                            reqStartIndex+"/"+reqEndIndex+"/"+reqSearchStr;
+
+                    sendRequest(); // 웹에서 html 읽어오기
+                }// end if
             }
         });
 
         btnParse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 tvResult.setText("");
 
-                switch(reqType){
+                switch (reqType){
                     case "xml":
                         parseXML();
                         break;
@@ -119,103 +164,97 @@ public class Main3Activity extends AppCompatActivity {
                         parseJSON();
                         break;
                 }
+
             }
         });
+
 
     } // end onCreate
 
-    public void request(String url_address) {
+    void sendRequest(){ // 웹에서 html 읽어오기
+        tvResult.setText("");
 
-
-        BufferedReader reader = null;
-        HttpURLConnection conn = null;
-
-        try {
-            URL url = new URL(url_address);
-            conn =(HttpURLConnection) url.openConnection();
-
-            if(conn != null){
-                conn.setConnectTimeout(5000);   // timeout 시간 설정. 경과하면 SocketTimeoutException 발생
-                conn.setUseCaches(false); // 캐시 사용 안함
-                conn.setRequestMethod("GET"); // GET 방식 request
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-
-                conn.setDoInput(true); // URLConnection 을 입력으로 사용. (true),  (false) --> 출력용
-
-                int responseCode= conn.getResponseCode(); // response code 값 성공하면 200
-                if(responseCode == HttpURLConnection.HTTP_OK){ // HTTP_OK: 200
-
-                    reader =  new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String line = null;
-                    while(true) {
-                        line = reader.readLine();
-                        if(line ==null) break;
-                        sb.append(line +"\n");
-                    }
-
-                }
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(reader != null) reader.close();
-                if(conn != null) conn.disconnect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        handler.post(new Runnable() {
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                    tvResult.setText(sb.toString());
+                sb = new StringBuffer();
+
+
+                try {
+                    URL url = new URL(urlAddress);
+
+                    conn = (HttpURLConnection)url.openConnection(); //접속
+                    if(conn != null) {
+                        conn.setConnectTimeout(2000);
+                        conn.setRequestMethod("GET");
+                        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                        conn.connect();
+
+                        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){ //200
+                            // 데이터 읽기
+                            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"utf-8")); //"utf-8
+                            while (true){
+                                String line = br.readLine();
+                                if(line == null) break;
+                                sb.append(line +"\n");
+                            }
+                            br.close(); // 스트림 해제
+                        } else{
+                            Log.d("text", "getResponseCode(): "+conn.getResponseCode());
+                        }
+                        conn.disconnect(); //연결 끊기
+                    } else{
+                        Log.d("test", "conn Null!");
+                    }
+                    // 값을 출력하기
+                    Log.d("test", sb.toString());
+                    handeler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvResult.setText(sb.toString());
+                        } // end run()
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
+        t.start(); // 쓰레드 시작
 
+    } // end sendRequest()
 
-    } // end request
-
-    public static String buildUrlAddress(String reqType, int startIndex, int endIndex, String statnNm) throws UnsupportedEncodingException {
-        String url_address = String.format("http://swopenapi.seoul.go.kr/api/subway/%s/%s/stationInfo/%d/%d/%s",
-                API_KEY, reqType, startIndex, endIndex, URLEncoder.encode(statnNm, "utf-8"));
-
-        return url_address;
-    }
-
-    void parseXML() {
+    void parseXML(){
         InputSource is = new InputSource(new StringReader(sb.toString()));
 
         // DOM parser 객체 생성
-        Document doc;  // 곧바로 InputStream 으로부터 받아 파싱
+        Document doc; // 곧바로 InputStream 으로부터 받아 파싱
 
         try {
             doc = dBuilder.parse(is);
             Element element = doc.getDocumentElement();
             element.normalize();
 
-            NodeList nList = doc.getElementsByTagName("row");  // 서울시 지하철은 <row>~</row> 로 구성됨
+            NodeList nList = doc.getElementsByTagName("row"); //// 서울시 지하철은 <row>~</row> 로 구성됨
 
             Log.d("myapp", "nList.getLength() = " + nList.getLength());
 
-            for(int i = 0; i < nList.getLength(); i++){
+            for(int i = 0; i <nList.getLength(); i++){
                 Node node = nList.item(i);
-                Element rowElement = (Element)node;   // 원래는 node.getNodeType() == Node.ELEMENT_NODE 체크해봐야 한다
-                final String subwayId =
-                        rowElement.getElementsByTagName("subwayId").item(0).getChildNodes().item(0).getNodeValue();
-                final String subwayNm =
-                        rowElement.getElementsByTagName("subwayNm").item(0).getChildNodes().item(0).getNodeValue();
+                Element rowElemnet = (Element)node; // 원래는 node.getNodeType() == Node.ELEMENT_NODE 체크해봐야 한다
+                final String subwayId = rowElemnet.getElementsByTagName("subwayId").item(0).getChildNodes().item(0).getNodeValue();
+                final String subwayNm = rowElemnet.getElementsByTagName("subwayNm").item(0).getChildNodes().item(0).getNodeValue();
 
-                handler.post(new Runnable() {
+                handeler.post(new Runnable() {
                     @Override
                     public void run() {
-                        tvResult.setText(tvResult.getText().toString() +
-                                "--------------\nId:" + subwayId + "\n호선:" + subwayNm + "\n");
+                        tvResult.setText(tvResult.getText().toString()+ "--------------\nId:" + subwayId + "\n호선:" + subwayNm + "\n");
                     }
-                }); // end post
-            } // end for
+                });
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -224,20 +263,21 @@ public class Main3Activity extends AppCompatActivity {
 
 
 
-    } // end parseXML
 
-    void parseJSON() {
+    } // end parseXML()
+
+    void parseJSON(){
 
         try {
             JSONObject obj = new JSONObject(sb.toString());
             JSONArray stationArr = obj.getJSONArray("stationList");
 
-            for(int i = 0; i < stationArr.length(); i++){
+            for(int i = 0; i<stationArr.length(); i++){
                 JSONObject station = (JSONObject)stationArr.get(i);
                 final String subwayId = station.getString("subwayId");
                 final String subwayNm = station.getString("subwayNm");
 
-                handler.post(new Runnable() {
+                handeler.post(new Runnable() {
                     @Override
                     public void run() {
                         tvResult.setText(tvResult.getText().toString() +
@@ -252,8 +292,6 @@ public class Main3Activity extends AppCompatActivity {
         }
 
 
-    } // end method
-
-
+    } // end parseJSON()
 
 } // end Main3Activity
