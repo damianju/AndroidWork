@@ -37,7 +37,7 @@ import java.util.TimerTask;
  *
  */
 
-public class Main3Activity extends AppCompatActivity {
+public class Main3Activity extends AppCompatActivity { 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
